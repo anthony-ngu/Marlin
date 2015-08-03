@@ -11,6 +11,8 @@
 int8_t encoderDiff; /* encoderDiff is updated from interrupt context and added to encoderPosition every LCD update */
 
 /* Configuration settings */
+int encoderPosition;
+
 int plaPreheatHotendTemp;
 int plaPreheatHPBTemp;
 int plaPreheatFanSpeed;
@@ -47,6 +49,8 @@ void copy_and_scalePID_i();
 void copy_and_scalePID_d();
 
 /* Different menus */
+static void lcd_quick_feedback();//Cause an LCD refresh, and give the user visual or audible feedback that something has happened
+
 static void lcd_status_screen();
 #ifdef ULTIPANEL
 extern bool powersupply;
@@ -69,8 +73,6 @@ static void lcd_sdcard_menu();
 #ifdef DELTA_CALIBRATION_MENU
 static void lcd_delta_calibrate_menu();
 #endif // DELTA_CALIBRATION_MENU
-
-static void lcd_quick_feedback();//Cause an LCD refresh, and give the user visual or audible feedback that something has happened
 
 /* Different types of actions that can be used in menu items. */
 static void menu_action_back(menuFunc_t data);
@@ -192,7 +194,7 @@ static void lcd_goto_menu(menuFunc_t menu, const uint32_t encoder=0, const bool 
   if (currentMenu != menu) {
     currentMenu = menu;
     encoderPosition = encoder;
-    if (feedback) lcd_quick_feedback();
+    if (feedback) {lcd_quick_feedback();}
 
     // For LCD_PROGRESS_BAR re-initialize the custom characters
     #if defined(LCD_PROGRESS_BAR) && defined(SDSUPPORT)
